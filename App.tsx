@@ -30,11 +30,10 @@ export default function App() {
   tagUserInfoCreate();
 
   useEffect(() => {
-    const unsubscribe = OneSignal.setNotificationOpenedHandler(
-      () => {
-        console.log("Notificação aberta!");
-      }
-    );
+    const unsubscribe = OneSignal.setNotificationOpenedHandler((response) => {
+      console.log(response);
+      console.log("Notificação aberta!");
+    });
 
     return () => unsubscribe;
   }, []);
