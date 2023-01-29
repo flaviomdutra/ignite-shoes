@@ -14,6 +14,7 @@ import { Loading } from "./src/components/Loading";
 
 import { CartContextProvider } from "./src/contexts/CartContext";
 import { tagUserInfoCreate } from "./src/notifications/notificationsTags";
+import { useEffect } from "react";
 
 const oneSignalAppId =
   Platform.OS === "ios"
@@ -21,14 +22,22 @@ const oneSignalAppId =
     : "9fedd404-002c-4d09-9b72-650146051dcf";
 OneSignal.setAppId(oneSignalAppId);
 
-OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-  console.log(response);
-});
+OneSignal.promptForPushNotificationsWithUserResponse();
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
-  tagUserInfoCreate()
+  tagUserInfoCreate();
+
+  useEffect(() => {
+    const unsubscribe = OneSignal.setNotificationOpenedHandler(
+      () => {
+        console.log("Notificação aberta!");
+      }
+    );
+
+    return () => unsubscribe;
+  }, []);
 
   return (
     <NativeBaseProvider theme={THEME}>
